@@ -25,18 +25,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { categories } from "@/lib/data";
-import { X, Upload, AlertCircle } from "lucide-react";
+import { X, Upload, AlertCircle, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+
+interface Specification {
+  key: string;
+  value: string;
+}
 
 interface FormData {
   name: string;
   description: string;
   price: number;
-  discount?: number;
+  discount: number | null;
   stockQuantity: number;
   category: string;
   tags: string;
+  rating: number;
+  reviewCount: number;
+  trending: boolean;
+  specifications: Specification[];
 }
 
 export default function NewProductPage() {
@@ -45,13 +55,32 @@ export default function NewProductPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [specifications, setSpecifications] = useState<Specification[]>([
+    { key: "", value: "" },
+  ]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
     watch,
-  } = useForm<FormData>();
+    setValue,
+  } = useForm<FormData>({
+    defaultValues: {
+      name: "",
+      description: "",
+      price: 0,
+      discount: null,
+      stockQuantity: 0,
+      category: "",
+      tags: "",
+      rating: 0,
+      reviewCount: 0,
+      trending: false,
+      specifications: [],
+    },
+  });
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -66,6 +95,24 @@ export default function NewProductPage() {
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const addSpecification = () => {
+    setSpecifications([...specifications, { key: "", value: "" }]);
+  };
+
+  const removeSpecification = (index: number) => {
+    setSpecifications(specifications.filter((_, i) => i !== index));
+  };
+
+  const updateSpecification = (
+    index: number,
+    field: "key" | "value",
+    value: string
+  ) => {
+    const newSpecifications = [...specifications];
+    newSpecifications[index][field] = value;
+    setSpecifications(newSpecifications);
   };
 
   if (!user || user.role !== "creator") {
@@ -94,6 +141,14 @@ export default function NewProductPage() {
         return;
       }
 
+      // Filter out empty specifications
+      const filteredSpecifications = specifications
+        .filter((spec) => spec.key.trim() !== "" && spec.value.trim() !== "")
+        .reduce((acc, spec) => {
+          acc[spec.key] = spec.value;
+          return acc;
+        }, {} as Record<string, string>);
+
       // Create FormData for file upload
       const formData = new FormData();
       files.forEach((file) => {
@@ -101,11 +156,27 @@ export default function NewProductPage() {
       });
 
       // Add product data
-      formData.append("data", JSON.stringify({
-        ...data,
-        tags: data.tags.split(",").map((tag) => tag.trim()),
-        creatorId: user.id,
-      }));
+      formData.append(
+        "data",
+        JSON.stringify({
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          discount: data.discount || null,
+          category: data.category,
+          rating: data.rating,
+          reviewCount: data.reviewCount,
+          trending: data.trending,
+          specifications: filteredSpecifications,
+          tags: data.tags.split(",").map((tag) => tag.trim()),
+          creator: {
+            name: user.name,
+            handle: user.handle,
+            image: user.profileImage,
+          },
+          creatorId: user.id,
+        })
+      );
 
       const response = await fetch("/api/products", {
         method: "POST",
@@ -148,10 +219,14 @@ export default function NewProductPage() {
                 <Label htmlFor="name">Product Name</Label>
                 <Input
                   id="name"
-                  {...register("name", { required: "Product name is required" })}
+                  {...register("name", {
+                    required: "Product name is required",
+                  })}
                 />
                 {errors.name && (
-                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.name.message}
+                  </p>
                 )}
               </div>
 
@@ -180,7 +255,10 @@ export default function NewProductPage() {
                     step="0.01"
                     {...register("price", {
                       required: "Price is required",
-                      min: { value: 0.01, message: "Price must be greater than 0" },
+                      min: {
+                        value: 0.01,
+                        message: "Price must be greater than 0",
+                      },
                     })}
                   />
                   {errors.price && (
@@ -197,7 +275,10 @@ export default function NewProductPage() {
                     type="number"
                     {...register("discount", {
                       min: { value: 0, message: "Discount cannot be negative" },
-                      max: { value: 100, message: "Discount cannot exceed 100%" },
+                      max: {
+                        value: 100,
+                        message: "Discount cannot exceed 100%",
+                      },
                     })}
                   />
                   {errors.discount && (
@@ -206,6 +287,56 @@ export default function NewProductPage() {
                     </p>
                   )}
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="rating">Rating (0-5)</Label>
+                  <Input
+                    id="rating"
+                    type="number"
+                    step="0.1"
+                    {...register("rating", {
+                      min: {
+                        value: 0,
+                        message: "Rating must be between 0 and 5",
+                      },
+                      max: {
+                        value: 5,
+                        message: "Rating must be between 0 and 5",
+                      },
+                    })}
+                  />
+                  {errors.rating && (
+                    <p className="text-sm text-destructive">
+                      {errors.rating.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reviewCount">Review Count</Label>
+                  <Input
+                    id="reviewCount"
+                    type="number"
+                    {...register("reviewCount", {
+                      min: {
+                        value: 0,
+                        message: "Review count cannot be negative",
+                      },
+                    })}
+                  />
+                  {errors.reviewCount && (
+                    <p className="text-sm text-destructive">
+                      {errors.reviewCount.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <Label htmlFor="trending">Mark as Trending</Label>
+                <Switch id="trending" {...register("trending")} />
               </div>
 
               <div className="space-y-2">
@@ -228,7 +359,9 @@ export default function NewProductPage() {
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
                 <Select
-                  {...register("category", { required: "Category is required" })}
+                  {...register("category", {
+                    required: "Category is required",
+                  })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
@@ -258,6 +391,50 @@ export default function NewProductPage() {
                 <p className="text-sm text-muted-foreground">
                   Example: vintage, handmade, limited edition
                 </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label>Product Specifications</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addSpecification}
+                  >
+                    <Plus className="h-4 w-4 mr-2" /> Add Specification
+                  </Button>
+                </div>
+
+                {specifications.map((spec, index) => (
+                  <div key={index} className="flex items-center gap-4">
+                    <Input
+                      placeholder="Key (e.g. Material)"
+                      value={spec.key}
+                      onChange={(e) =>
+                        updateSpecification(index, "key", e.target.value)
+                      }
+                      className="flex-1"
+                    />
+                    <Input
+                      placeholder="Value (e.g. Cotton)"
+                      value={spec.value}
+                      onChange={(e) =>
+                        updateSpecification(index, "value", e.target.value)
+                      }
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeSpecification(index)}
+                      className="flex-shrink-0"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
 
               <div className="space-y-4">
