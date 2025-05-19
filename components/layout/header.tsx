@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import CartSheet from "@/components/cart/cart-sheet";
+import { useAuth } from "@/lib/auth-context";
 import {
   User,
   Heart,
@@ -41,10 +42,10 @@ const categories = [
 ];
 
 export default function Header() {
+  const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for logged in status
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -52,14 +53,6 @@ export default function Header() {
       setIsScrolled(window.scrollY > 10);
     };
 
-    // Check if user is logged in
-    const checkLoginStatus = () => {
-      // Replace this with your actual auth logic
-      const token = localStorage.getItem("auth-token");
-      setIsLoggedIn(!!token);
-    };
-
-    checkLoginStatus();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -74,6 +67,13 @@ export default function Header() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [mobileMenuOpen]);
+
+  const handleLogout = () => {
+    logout();
+    setMobileMenuOpen(false);
+  };
+
+  const dashboardLink = user?.role === "creator" ? "/creator/dashboard" : "/account/dashboard";
 
   return (
     <header
@@ -144,7 +144,7 @@ export default function Header() {
 
             <CartSheet />
 
-            {isLoggedIn ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-10 w-10">
@@ -155,7 +155,7 @@ export default function Header() {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/account/dashboard">Dashboard</Link>
+                    <Link href={dashboardLink}>Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/account/orders">My Orders</Link>
@@ -164,12 +164,7 @@ export default function Header() {
                     <Link href="/account/wishlist">Wishlist</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => {
-                      localStorage.removeItem("auth-token");
-                      setIsLoggedIn(false);
-                    }}
-                  >
+                  <DropdownMenuItem onClick={handleLogout}>
                     Log Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -184,7 +179,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center space-x-2 lg:hidden">
-            {!isLoggedIn && (
+            {!user && (
               <Button variant="default" size="sm" asChild className="mr-1">
                 <Link href="/signup">Get Started</Link>
               </Button>
@@ -298,8 +293,8 @@ export default function Header() {
               >
                 <Heart className="h-5 w-5" />
               </Button>
-              {isLoggedIn && (
-                <Link href="/account/dashboard" className="flex-1 mr-2">
+              {user && (
+                <Link href={dashboardLink} className="flex-1 mr-2">
                   <Button variant="outline" size="icon" className="h-12 w-12">
                     <User className="h-5 w-5" />
                   </Button>
@@ -310,7 +305,7 @@ export default function Header() {
               </div>
             </div>
 
-            {!isLoggedIn && (
+            {!user ? (
               <div className="grid grid-cols-2 gap-4">
                 <Button variant="outline" size="lg" className="h-12" asChild>
                   <Link href="/login">Login</Link>
@@ -319,15 +314,11 @@ export default function Header() {
                   <Link href="/signup">Sign Up</Link>
                 </Button>
               </div>
-            )}
-            {isLoggedIn && (
+            ) : (
               <Button
                 variant="outline"
                 className="w-full h-12"
-                onClick={() => {
-                  localStorage.removeItem("auth-token");
-                  setIsLoggedIn(false);
-                }}
+                onClick={handleLogout}
               >
                 Log Out
               </Button>
