@@ -37,7 +37,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             <Link href={`/products/${product.id}`} className="block">
               <div className="relative aspect-square bg-muted overflow-hidden">
                 <Image
-                  src={product.image}
+                  src={product.images[0]}
                   alt={product.name}
                   fill
                   className={cn(

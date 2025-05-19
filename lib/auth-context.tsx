@@ -118,7 +118,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         error: null,
       });
 
-      router.push(role === "creator" ? "/creator/dashboard" : "/account/dashboard");
+      // Redirect to home page instead of dashboard
+      router.push("/");
     } catch (error) {
       setAuthState((prev) => ({
         ...prev,
@@ -163,7 +164,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         error: null,
       });
 
-      router.push(userData.role === "creator" ? "/creator/dashboard" : "/account/dashboard");
+      // Redirect to home page instead of dashboard
+      router.push("/");
     } catch (error) {
       setAuthState((prev) => ({
         ...prev,

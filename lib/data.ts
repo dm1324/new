@@ -128,7 +128,11 @@ export const products: Product[] = [
     id: "p1",
     name: "Minimalist Daily Planner",
     price: 24.99,
-    image: "https://images.pexels.com/photos/733852/pexels-photo-733852.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    images: [
+      "https://images.pexels.com/photos/733852/pexels-photo-733852.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/760710/pexels-photo-760710.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1809644/pexels-photo-1809644.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ],
     category: "Lifestyle",
     creator: {
       name: "Emma Lewis",
@@ -144,7 +148,11 @@ export const products: Product[] = [
     id: "p2",
     name: "Wireless Noise-Cancelling Headphones",
     price: 149.99,
-    image: "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    images: [
+      "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/3394651/pexels-photo-3394651.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/3394652/pexels-photo-3394652.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ],
     category: "Tech",
     creator: {
       name: "Alex Rivera",
@@ -160,7 +168,11 @@ export const products: Product[] = [
     id: "p3",
     name: "Sustainable Cotton Tote Bag",
     price: 19.99,
-    image: "https://images.pexels.com/photos/5632379/pexels-photo-5632379.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    images: [
+      "https://images.pexels.com/photos/5632379/pexels-photo-5632379.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/5632380/pexels-photo-5632380.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/5632381/pexels-photo-5632381.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ],
     category: "Fashion",
     creator: {
       name: "Sophia Chen",
@@ -176,7 +188,11 @@ export const products: Product[] = [
     id: "p4",
     name: "Premium Fitness Resistance Bands",
     price: 29.99,
-    image: "https://images.pexels.com/photos/4397840/pexels-photo-4397840.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    images: [
+      "https://images.pexels.com/photos/4397840/pexels-photo-4397840.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/4397841/pexels-photo-4397841.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/4397842/pexels-photo-4397842.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ],
     category: "Fitness",
     creator: {
       name: "Maya Johnson",

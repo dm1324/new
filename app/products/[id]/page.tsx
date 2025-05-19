@@ -1,18 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ShoppingCart, Heart } from "lucide-react";
+import { Star, ShoppingCart, Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { products } from "@/lib/data";
 import { useCartStore } from "@/lib/store";
 import ProductGrid from "@/components/products/product-grid";
+import { cn } from "@/lib/utils";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const product = products.find((p) => p.id === params.id);
   const { addItem } = useCartStore();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isImageTransitioning, setIsImageTransitioning] = useState(false);
   
   if (!product) {
     notFound();
@@ -30,16 +34,85 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     ...(product.specifications || {}),
   };
 
+  const nextImage = () => {
+    setIsImageTransitioning(true);
+    setTimeout(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+      setIsImageTransitioning(false);
+    }, 300);
+  };
+
+  const prevImage = () => {
+    setIsImageTransitioning(true);
+    setTimeout(() => {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? product.images.length - 1 : prev - 1
+      );
+      setIsImageTransitioning(false);
+    }, 300);
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-          />
+        <div className="relative">
+          <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
+            <Image
+              src={product.images[currentImageIndex]}
+              alt={product.name}
+              fill
+              className={cn(
+                "object-cover transition-opacity duration-300",
+                isImageTransitioning ? "opacity-0" : "opacity-100"
+              )}
+            />
+            
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full h-10 w-10"
+              onClick={prevImage}
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+            
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full h-10 w-10"
+              onClick={nextImage}
+            >
+              <ChevronRight className="h-6 w-6" />
+            </Button>
+          </div>
+          
+          <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+            {product.images.map((image, index) => (
+              <button
+                key={index}
+                className={cn(
+                  "relative w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border-2",
+                  currentImageIndex === index
+                    ? "border-primary"
+                    : "border-transparent"
+                )}
+                onClick={() => {
+                  setIsImageTransitioning(true);
+                  setTimeout(() => {
+                    setCurrentImageIndex(index);
+                    setIsImageTransitioning(false);
+                  }, 300);
+                }}
+              >
+                <Image
+                  src={image}
+                  alt={`${product.name} - View ${index + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
         </div>
         
         <div>
