@@ -143,6 +143,9 @@ export default function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/account/wishlist">Wishlist</Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account/addresses">Saved Addresses</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     Log Out

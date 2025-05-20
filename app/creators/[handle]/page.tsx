@@ -1,3 +1,5 @@
+"use client";
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -20,10 +22,21 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
 
   return (
     <div>
-      {/* Hero Section */}
-      <div className="relative h-[50vh] min-h-[400px] bg-muted">
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-        <div className="container mx-auto px-4 h-full flex items-end pb-12 relative">
+      {/* Cover Image */}
+      <div className="relative h-[300px] w-full">
+        <Image
+          src={creator.coverImage || creator.profileImage}
+          alt={`${creator.name}'s cover`}
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent" />
+      </div>
+
+      {/* Profile Section */}
+      <div className="relative -mt-32 pb-12">
+        <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-start md:items-end gap-6 md:gap-12">
             <div className="relative h-32 w-32 md:h-48 md:w-48 rounded-xl overflow-hidden border-4 border-background">
               <Image
@@ -46,19 +59,19 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
                 )}
               </div>
               
-              <h1 className="text-4xl font-bold mb-2">{creator.name}</h1>
-              <p className="text-xl text-muted-foreground mb-6">@{creator.handle}</p>
+              <h1 className="text-4xl font-bold mb-2 text-white">{creator.name}</h1>
+              <p className="text-xl text-white/90 mb-6">@{creator.handle}</p>
               
               <div className="flex items-center gap-6">
-                <div className="flex items-center text-muted-foreground">
+                <div className="flex items-center text-white/80">
                   <Instagram className="h-5 w-5 mr-2" />
                   <span>{creator.socialsCount.instagram}</span>
                 </div>
-                <div className="flex items-center text-muted-foreground">
+                <div className="flex items-center text-white/80">
                   <Youtube className="h-5 w-5 mr-2" />
                   <span>{creator.socialsCount.youtube}</span>
                 </div>
-                <div className="flex items-center text-muted-foreground">
+                <div className="flex items-center text-white/80">
                   <TikTok className="h-5 w-5 mr-2" />
                   <span>{creator.socialsCount.tiktok}</span>
                 </div>
