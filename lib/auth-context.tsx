@@ -11,6 +11,9 @@ export interface User {
   email: string;
   role: UserRole;
   avatar?: string;
+  // Add these properties that were missing
+  handle?: string;
+  profileImage?: string;
   creatorProfile?: {
     handle: string;
     bio: string;
@@ -81,12 +84,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Validate test credentials
-      const isValidUser = 
-        (role === "user" && 
-          email === TEST_CREDENTIALS.user.email && 
+      const isValidUser =
+        (role === "user" &&
+          email === TEST_CREDENTIALS.user.email &&
           password === TEST_CREDENTIALS.user.password) ||
-        (role === "creator" && 
-          email === TEST_CREDENTIALS.creator.email && 
+        (role === "creator" &&
+          email === TEST_CREDENTIALS.creator.email &&
           password === TEST_CREDENTIALS.creator.password);
 
       if (!isValidUser) {

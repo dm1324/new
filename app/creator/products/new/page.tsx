@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Switch } from "@/components/ui/switch";
 import { categories } from "@/lib/data";
 import { X, Upload, AlertCircle, Plus, Trash2 } from "lucide-react";

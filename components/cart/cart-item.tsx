@@ -14,24 +14,24 @@ interface CartItemProps {
 
 export default function CartItem({ product, quantity }: CartItemProps) {
   const { updateQuantity, removeItem } = useCartStore();
-  
+
   const price = product.discount
     ? product.price * (1 - product.discount / 100)
     : product.price;
-  
+
   const total = price * quantity;
 
   return (
     <div className="flex gap-4 py-4">
       <div className="relative h-24 w-24 rounded-lg overflow-hidden flex-shrink-0">
         <Image
-          src={product.image}
+          src={product.images?.[0] || "/placeholder-product.png"}
           alt={product.name}
           fill
           className="object-cover"
         />
       </div>
-      
+
       <div className="flex-1">
         <Link
           href={`/products/${product.id}`}
@@ -39,7 +39,7 @@ export default function CartItem({ product, quantity }: CartItemProps) {
         >
           {product.name}
         </Link>
-        
+
         <div className="text-sm text-muted-foreground mt-1">
           <Link
             href={`/creators/${product.creator.handle}`}
@@ -48,7 +48,7 @@ export default function CartItem({ product, quantity }: CartItemProps) {
             @{product.creator.handle}
           </Link>
         </div>
-        
+
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button
@@ -69,7 +69,7 @@ export default function CartItem({ product, quantity }: CartItemProps) {
               <Plus className="h-4 w-4" />
             </Button>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="text-right">
               <div className="font-medium">${total.toFixed(2)}</div>
@@ -79,7 +79,7 @@ export default function CartItem({ product, quantity }: CartItemProps) {
                 </div>
               )}
             </div>
-            
+
             <Button
               variant="ghost"
               size="icon"
