@@ -63,7 +63,8 @@ export default function Header() {
     setMobileMenuOpen(false);
   };
 
-  const dashboardLink = user?.role === "creator" ? "/creator/dashboard" : "/account/dashboard";
+  const dashboardLink =
+    user?.role === "creator" ? "/creator/dashboard" : "/account/dashboard";
 
   return (
     <header
@@ -76,9 +77,9 @@ export default function Header() {
       )}
     >
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between lg:justify-around">
           <div className="flex items-center gap-4">
-            <Link href="/" className="font-bold text-lg">
+            <Link href="/" className="font-bold text-xl lg:text-2xl">
               CreatorMarket
             </Link>
           </div>
@@ -163,7 +164,7 @@ export default function Header() {
 
           <div className="flex lg:hidden items-center space-x-2">
             <CartSheet />
-            
+
             {user ? (
               <Sheet>
                 <SheetTrigger asChild>

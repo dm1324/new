@@ -1,3 +1,4 @@
+// components/products/product-grid.tsx
 "use client";
 
 import Link from "next/link";
@@ -9,6 +10,7 @@ import { ShoppingCart, Heart, Star, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Product } from "@/lib/types";
 import { useState } from "react";
+import { useWishlistStore } from "@/lib/store/wishlist";
 
 interface ProductGridProps {
   products: Product[];
@@ -16,6 +18,7 @@ interface ProductGridProps {
 
 export default function ProductGrid({ products }: ProductGridProps) {
   const [hoverStates, setHoverStates] = useState<Record<string, boolean>>({});
+  const { addItem, removeItem, isInWishlist } = useWishlistStore();
 
   const handleProductHover = (productId: string, isHovered: boolean) => {
     setHoverStates((prev) => ({
@@ -24,7 +27,15 @@ export default function ProductGrid({ products }: ProductGridProps) {
     }));
   };
 
-  // Tag color styles based on tag content
+  const handleWishlistClick = (productId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isInWishlist(productId)) {
+      removeItem(productId);
+    } else {
+      addItem(productId);
+    }
+  };
+
   const getTagStyle = (tag: string) => {
     switch (tag.toLowerCase()) {
       case "self made":
@@ -85,7 +96,6 @@ export default function ProductGrid({ products }: ProductGridProps) {
                   </Link>
                 </Badge>
 
-                {/* Product tags on the image */}
                 {product.tags && product.tags.length > 0 && (
                   <div
                     className={cn(
@@ -116,10 +126,14 @@ export default function ProductGrid({ products }: ProductGridProps) {
                 >
                   <Button
                     size="icon"
-                    variant="secondary"
+                    variant={isInWishlist(product.id) ? "default" : "secondary"}
                     className="rounded-full shadow-sm mr-2 h-12 w-12"
+                    onClick={(e) => handleWishlistClick(product.id, e)}
                   >
-                    <Heart className="h-5 w-5" />
+                    <Heart
+                      className="h-5 w-5"
+                      fill={isInWishlist(product.id) ? "currentColor" : "none"}
+                    />
                   </Button>
                   <Button
                     size="icon"

@@ -1,3 +1,4 @@
+// lib/types.ts
 export interface Creator {
   id: string;
   name: string;
@@ -48,6 +49,10 @@ export interface CartState {
   total: number;
 }
 
+export interface WishlistState {
+  items: string[]; // Array of product IDs
+}
+
 export interface Address {
   label: string;
   line1: string;
@@ -66,6 +71,7 @@ export interface User {
   role: "user" | "creator";
   avatar?: string;
   addresses?: Address[];
+  wishlist?: string[];
   creatorProfile?: {
     handle: string;
     bio: string;

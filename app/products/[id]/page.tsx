@@ -1,3 +1,4 @@
+// app/products/[id]/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -16,12 +17,14 @@ import {
 } from "lucide-react";
 import { products } from "@/lib/data";
 import { useCartStore } from "@/lib/store";
+import { useWishlistStore } from "@/lib/store/wishlist";
 import ProductGrid from "@/components/products/product-grid";
 import { cn } from "@/lib/utils";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const product = products.find((p) => p.id === params.id);
-  const { addItem } = useCartStore();
+  const { addItem: addToCart } = useCartStore();
+  const { addItem, removeItem, isInWishlist } = useWishlistStore();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageTransitioning, setIsImageTransitioning] = useState(false);
 
@@ -59,7 +62,14 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     }, 300);
   };
 
-  // Tag color styles based on tag content
+  const handleWishlistClick = () => {
+    if (isInWishlist(product.id)) {
+      removeItem(product.id);
+    } else {
+      addItem(product.id);
+    }
+  };
+
   const getTagStyle = (tag: string) => {
     switch (tag.toLowerCase()) {
       case "self made":
@@ -110,7 +120,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               <ChevronRight className="h-6 w-6" />
             </Button>
 
-            {/* Product tags on the image */}
             {product.tags && product.tags.length > 0 && (
               <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
                 {product.tags.map((tag) => (
@@ -168,7 +177,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
           <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
 
-          {/* Product tags below title */}
           {product.tags && product.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-5">
               {product.tags.map((tag) => (
@@ -217,13 +225,21 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <Button
               size="lg"
               className="flex-1"
-              onClick={() => addItem(product.id)}
+              onClick={() => addToCart(product.id)}
             >
               <ShoppingCart className="mr-2 h-5 w-5" />
               Add to Cart
             </Button>
-            <Button size="lg" variant="outline">
-              <Heart className="h-5 w-5" />
+            <Button
+              size="lg"
+              variant={isInWishlist(product.id) ? "default" : "outline"}
+              onClick={handleWishlistClick}
+            >
+              <Heart
+                className="h-5 w-5 mr-2"
+                fill={isInWishlist(product.id) ? "currentColor" : "none"}
+              />
+              {isInWishlist(product.id) ? "In Wishlist" : "Add to Wishlist"}
             </Button>
           </div>
 
