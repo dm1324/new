@@ -3,6 +3,7 @@ export interface Creator {
   name: string;
   handle: string;
   profileImage: string;
+  coverImage?: string;
   category: string;
   followers: string;
   socialsCount: {
@@ -34,6 +35,7 @@ export interface Product {
   specifications?: {
     [key: string]: string;
   };
+  tags?: string[];
 }
 
 export interface CartItem {
@@ -44,4 +46,32 @@ export interface CartItem {
 export interface CartState {
   items: CartItem[];
   total: number;
+}
+
+export interface Address {
+  label: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  isDefault?: boolean;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "user" | "creator";
+  avatar?: string;
+  addresses?: Address[];
+  creatorProfile?: {
+    handle: string;
+    bio: string;
+    followers: number;
+    categories: string[];
+    coverImage?: string;
+    storeLayout?: "default" | "minimal" | "grid" | "magazine";
+  };
 }
