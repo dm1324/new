@@ -9,13 +9,17 @@ import { Instagram, Youtube, BookText as TikTok } from "lucide-react";
 import ProductGrid from "@/components/products/product-grid";
 import { featuredCreators, products } from "@/lib/data";
 
-export default function CreatorShopPage({ params }: { params: { handle: string } }) {
+export default function CreatorShopPage({
+  params,
+}: {
+  params: { handle: string };
+}) {
   const creator = featuredCreators.find((c) => c.handle === params.handle);
-  
+
   if (!creator) {
     notFound();
   }
-  
+
   const creatorProducts = products.filter(
     (product) => product.creator.handle === creator.handle
   );
@@ -31,14 +35,14 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent" />
       </div>
 
-      {/* Profile Section */}
-      <div className="relative -mt-32 pb-12">
+      {/* Profile Section - Moved below the cover image */}
+      <div className="bg-background py-8">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-start md:items-end gap-6 md:gap-12">
-            <div className="relative h-32 w-32 md:h-48 md:w-48 rounded-xl overflow-hidden border-4 border-background">
+          <div className="flex flex-col md:flex-row items-start gap-6 md:gap-12">
+            {/* Profile Image - Positioned higher to overlap with cover */}
+            <div className="relative -mt-20 h-32 w-32 md:h-48 md:w-48 rounded-xl overflow-hidden border-4 border-background">
               <Image
                 src={creator.profileImage}
                 alt={creator.name}
@@ -46,7 +50,7 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
                 className="object-cover"
               />
             </div>
-            
+
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
                 <Badge variant="secondary" className="text-sm py-1.5">
@@ -58,20 +62,22 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
                   </Badge>
                 )}
               </div>
-              
-              <h1 className="text-4xl font-bold mb-2 text-white">{creator.name}</h1>
-              <p className="text-xl text-white/90 mb-6">@{creator.handle}</p>
-              
+
+              <h1 className="text-4xl font-bold mb-2">{creator.name}</h1>
+              <p className="text-xl text-muted-foreground mb-6">
+                @{creator.handle}
+              </p>
+
               <div className="flex items-center gap-6">
-                <div className="flex items-center text-white/80">
+                <div className="flex items-center text-muted-foreground">
                   <Instagram className="h-5 w-5 mr-2" />
                   <span>{creator.socialsCount.instagram}</span>
                 </div>
-                <div className="flex items-center text-white/80">
+                <div className="flex items-center text-muted-foreground">
                   <Youtube className="h-5 w-5 mr-2" />
                   <span>{creator.socialsCount.youtube}</span>
                 </div>
-                <div className="flex items-center text-white/80">
+                <div className="flex items-center text-muted-foreground">
                   <TikTok className="h-5 w-5 mr-2" />
                   <span>{creator.socialsCount.tiktok}</span>
                 </div>
@@ -80,7 +86,7 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
           </div>
         </div>
       </div>
-      
+
       {/* Content Section */}
       <div className="container mx-auto px-4 py-12">
         <Tabs defaultValue="shop" className="space-y-8">
@@ -92,11 +98,13 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
               About
             </TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="shop" className="space-y-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-muted/30 rounded-lg p-6 text-center">
-                <div className="text-2xl font-bold mb-1">{creatorProducts.length}</div>
+                <div className="text-2xl font-bold mb-1">
+                  {creatorProducts.length}
+                </div>
                 <div className="text-sm text-muted-foreground">Products</div>
               </div>
               <div className="bg-muted/30 rounded-lg p-6 text-center">
@@ -109,22 +117,30 @@ export default function CreatorShopPage({ params }: { params: { handle: string }
               </div>
               <div className="bg-muted/30 rounded-lg p-6 text-center">
                 <div className="text-2xl font-bold mb-1">98%</div>
-                <div className="text-sm text-muted-foreground">Satisfaction</div>
+                <div className="text-sm text-muted-foreground">
+                  Satisfaction
+                </div>
               </div>
             </div>
-            
+
             <ProductGrid products={creatorProducts} />
           </TabsContent>
-          
+
           <TabsContent value="about">
             <div className="max-w-3xl space-y-8">
               <div>
-                <h2 className="text-2xl font-bold mb-4">About {creator.name}</h2>
-                <p className="text-lg text-muted-foreground">{creator.description}</p>
+                <h2 className="text-2xl font-bold mb-4">
+                  About {creator.name}
+                </h2>
+                <p className="text-lg text-muted-foreground">
+                  {creator.description}
+                </p>
               </div>
-              
+
               <div>
-                <h3 className="text-xl font-semibold mb-4">Connect with {creator.name}</h3>
+                <h3 className="text-xl font-semibold mb-4">
+                  Connect with {creator.name}
+                </h3>
                 <div className="flex gap-4">
                   <Button variant="outline" size="lg" className="gap-2">
                     <Instagram className="h-5 w-5" />

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, Heart, Star } from "lucide-react";
+import { ShoppingCart, Heart, Star, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Product } from "@/lib/types";
 import { useState } from "react";
@@ -22,6 +22,24 @@ export default function ProductGrid({ products }: ProductGridProps) {
       ...prev,
       [productId]: isHovered,
     }));
+  };
+
+  // Tag color styles based on tag content
+  const getTagStyle = (tag: string) => {
+    switch (tag.toLowerCase()) {
+      case "self made":
+        return "bg-blue-100 text-blue-800 hover:bg-blue-200";
+      case "promotional":
+        return "bg-green-100 text-green-800 hover:bg-green-200";
+      case "resale":
+        return "bg-purple-100 text-purple-800 hover:bg-purple-200";
+      case "limited edition":
+        return "bg-amber-100 text-amber-800 hover:bg-amber-200";
+      case "new arrival":
+        return "bg-teal-100 text-teal-800 hover:bg-teal-200";
+      default:
+        return "bg-gray-100 text-gray-800 hover:bg-gray-200";
+    }
   };
 
   return (
@@ -66,6 +84,29 @@ export default function ProductGrid({ products }: ProductGridProps) {
                     {product.category}
                   </Link>
                 </Badge>
+
+                {/* Product tags on the image */}
+                {product.tags && product.tags.length > 0 && (
+                  <div
+                    className={cn(
+                      "absolute bottom-16 left-4 flex flex-wrap gap-2 transition-opacity duration-300",
+                      hoverStates[product.id] ? "opacity-100" : "opacity-80"
+                    )}
+                  >
+                    {product.tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        className={cn(
+                          "rounded-full text-sm py-0.5 px-2 flex items-center gap-1.5",
+                          getTagStyle(tag)
+                        )}
+                      >
+                        <Tag className="h-3 w-3" />
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
 
                 <div
                   className={cn(

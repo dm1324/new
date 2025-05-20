@@ -6,7 +6,14 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ShoppingCart, Heart, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Star,
+  ShoppingCart,
+  Heart,
+  ChevronLeft,
+  ChevronRight,
+  Tag,
+} from "lucide-react";
 import { products } from "@/lib/data";
 import { useCartStore } from "@/lib/store";
 import ProductGrid from "@/components/products/product-grid";
@@ -17,11 +24,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const { addItem } = useCartStore();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageTransitioning, setIsImageTransitioning] = useState(false);
-  
+
   if (!product) {
     notFound();
   }
-  
+
   const relatedProducts = products
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
@@ -45,11 +52,29 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const prevImage = () => {
     setIsImageTransitioning(true);
     setTimeout(() => {
-      setCurrentImageIndex((prev) => 
+      setCurrentImageIndex((prev) =>
         prev === 0 ? product.images.length - 1 : prev - 1
       );
       setIsImageTransitioning(false);
     }, 300);
+  };
+
+  // Tag color styles based on tag content
+  const getTagStyle = (tag: string) => {
+    switch (tag.toLowerCase()) {
+      case "self made":
+        return "bg-blue-100 text-blue-800 hover:bg-blue-200";
+      case "promotional":
+        return "bg-green-100 text-green-800 hover:bg-green-200";
+      case "resale":
+        return "bg-purple-100 text-purple-800 hover:bg-purple-200";
+      case "limited edition":
+        return "bg-amber-100 text-amber-800 hover:bg-amber-200";
+      case "new arrival":
+        return "bg-teal-100 text-teal-800 hover:bg-teal-200";
+      default:
+        return "bg-gray-100 text-gray-800 hover:bg-gray-200";
+    }
   };
 
   return (
@@ -66,7 +91,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 isImageTransitioning ? "opacity-0" : "opacity-100"
               )}
             />
-            
+
             <Button
               variant="secondary"
               size="icon"
@@ -75,7 +100,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             >
               <ChevronLeft className="h-6 w-6" />
             </Button>
-            
+
             <Button
               variant="secondary"
               size="icon"
@@ -84,8 +109,26 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             >
               <ChevronRight className="h-6 w-6" />
             </Button>
+
+            {/* Product tags on the image */}
+            {product.tags && product.tags.length > 0 && (
+              <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
+                {product.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    className={cn(
+                      "text-sm py-1 px-3 rounded-full flex items-center gap-1.5 transition-colors",
+                      getTagStyle(tag)
+                    )}
+                  >
+                    <Tag className="h-3.5 w-3.5" />
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
-          
+
           <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
             {product.images.map((image, index) => (
               <button
@@ -114,7 +157,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             ))}
           </div>
         </div>
-        
+
         <div>
           <div className="flex items-center gap-4 mb-4">
             <Badge variant="secondary">{product.category}</Badge>
@@ -122,9 +165,27 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               <Badge variant="destructive">{product.discount}% OFF</Badge>
             )}
           </div>
-          
+
           <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
-          
+
+          {/* Product tags below title */}
+          {product.tags && product.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-5">
+              {product.tags.map((tag) => (
+                <Badge
+                  key={tag}
+                  className={cn(
+                    "text-sm py-1 px-3 flex items-center gap-1.5 transition-colors",
+                    getTagStyle(tag)
+                  )}
+                >
+                  <Tag className="h-3.5 w-3.5" />
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
+
           <div className="flex items-center gap-4 mb-6">
             <div className="flex items-center">
               <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
@@ -134,7 +195,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               {product.reviewCount} reviews
             </span>
           </div>
-          
+
           <div className="mb-8">
             {product.discount ? (
               <div className="flex items-center gap-4">
@@ -151,9 +212,13 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               </span>
             )}
           </div>
-          
+
           <div className="flex gap-4 mb-12">
-            <Button size="lg" className="flex-1" onClick={() => addItem(product.id)}>
+            <Button
+              size="lg"
+              className="flex-1"
+              onClick={() => addItem(product.id)}
+            >
               <ShoppingCart className="mr-2 h-5 w-5" />
               Add to Cart
             </Button>
@@ -161,18 +226,18 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               <Heart className="h-5 w-5" />
             </Button>
           </div>
-          
+
           <Tabs defaultValue="description" className="space-y-8">
             <TabsList>
               <TabsTrigger value="description">Description</TabsTrigger>
               <TabsTrigger value="specifications">Specifications</TabsTrigger>
               <TabsTrigger value="shipping">Shipping</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="description" className="text-muted-foreground">
               {product.description || "No description available."}
             </TabsContent>
-            
+
             <TabsContent value="specifications">
               <dl className="space-y-4">
                 {Object.entries(specifications).map(([key, value]) => (
@@ -183,8 +248,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 ))}
               </dl>
             </TabsContent>
-            
-            <TabsContent value="shipping" className="space-y-4 text-muted-foreground">
+
+            <TabsContent
+              value="shipping"
+              className="space-y-4 text-muted-foreground"
+            >
               <p>Free shipping on orders over $50</p>
               <p>Standard delivery: 3-5 business days</p>
               <p>Express delivery: 1-2 business days</p>
@@ -192,7 +260,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </Tabs>
         </div>
       </div>
-      
+
       <div className="mt-24">
         <h2 className="text-2xl font-bold mb-8">Related Products</h2>
         <ProductGrid products={relatedProducts} />
