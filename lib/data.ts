@@ -66,6 +66,7 @@ export const featuredCreators: Creator[] = [
     name: "Sophia Chen",
     handle: "sophiadesigns",
     profileImage: "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    coverImage: "https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&w=1600",
     category: "Fashion",
     followers: "1.2M",
     socialsCount: { instagram: "820K", youtube: "450K", tiktok: "1.2M" },
@@ -78,6 +79,7 @@ export const featuredCreators: Creator[] = [
     name: "Alex Rivera",
     handle: "techwithalex",
     profileImage: "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    coverImage: "https://images.pexels.com/photos/3739418/pexels-photo-3739418.jpeg?auto=compress&cs=tinysrgb&w=1600",
     category: "Tech",
     followers: "875K",
     socialsCount: { youtube: "875K", instagram: "340K", tiktok: "590K" },
@@ -90,36 +92,13 @@ export const featuredCreators: Creator[] = [
     name: "Maya Johnson",
     handle: "mayafitlife",
     profileImage: "https://images.pexels.com/photos/7148384/pexels-photo-7148384.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    coverImage: "https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=1600",
     category: "Fitness",
     followers: "650K",
     socialsCount: { instagram: "650K", youtube: "220K", tiktok: "780K" },
     verified: true,
     description: "Certified personal trainer helping you achieve your fitness goals with effective workouts and nutrition tips.",
     productCount: 32
-  },
-  {
-    id: "4",
-    name: "Raj Patel",
-    handle: "rajcooking",
-    profileImage: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    category: "Business",
-    followers: "920K",
-    socialsCount: { youtube: "920K", instagram: "540K", tiktok: "1.1M" },
-    verified: true,
-    description: "Chef and culinary expert sharing authentic recipes and kitchen gadgets for home cooks of all levels.",
-    productCount: 21
-  },
-  {
-    id: "5",
-    name: "Emma Lewis",
-    handle: "emmacreates",
-    profileImage: "https://images.pexels.com/photos/1462637/pexels-photo-1462637.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    category: "Photography",
-    followers: "780K",
-    socialsCount: { instagram: "780K", youtube: "320K", tiktok: "550K" },
-    verified: true,
-    description: "Digital artist and illustrator designing custom artwork and sharing creative tutorials.",
-    productCount: 17
   }
 ];
 
@@ -142,7 +121,8 @@ export const products: Product[] = [
     rating: 4.8,
     reviewCount: 124,
     trending: true,
-    discount: null
+    discount: null,
+    tags: ["Self Made", "Promotional"]
   },
   {
     id: "p2",
@@ -162,7 +142,8 @@ export const products: Product[] = [
     rating: 4.9,
     reviewCount: 302,
     trending: true,
-    discount: 15
+    discount: 15,
+    tags: ["Resale"]
   },
   {
     id: "p3",
@@ -182,26 +163,7 @@ export const products: Product[] = [
     rating: 4.7,
     reviewCount: 89,
     trending: true,
-    discount: null
-  },
-  {
-    id: "p4",
-    name: "Premium Fitness Resistance Bands",
-    price: 29.99,
-    images: [
-      "https://images.pexels.com/photos/4397840/pexels-photo-4397840.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      "https://images.pexels.com/photos/4397841/pexels-photo-4397841.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      "https://images.pexels.com/photos/4397842/pexels-photo-4397842.jpeg?auto=compress&cs=tinysrgb&w=1600"
-    ],
-    category: "Fitness",
-    creator: {
-      name: "Maya Johnson",
-      handle: "mayafitlife",
-      image: "https://images.pexels.com/photos/7148384/pexels-photo-7148384.jpeg?auto=compress&cs=tinysrgb&w=1600"
-    },
-    rating: 4.6,
-    reviewCount: 156,
-    trending: true,
-    discount: 20
+    discount: null,
+    tags: ["Self Made", "Promotional"]
   }
 ];
