@@ -155,7 +155,7 @@ export default function Header() {
               </DropdownMenu>
             ) : (
               <Button variant="default" asChild>
-                <Link href="/signup">Get Started</Link>
+                <Link href="/login">Get Started</Link>
               </Button>
             )}
 
@@ -206,7 +206,7 @@ export default function Header() {
               </Sheet>
             ) : (
               <Button variant="default" size="sm" asChild>
-                <Link href="/signup">Get Started</Link>
+                <Link href="/login">Get Started</Link>
               </Button>
             )}
           </div>

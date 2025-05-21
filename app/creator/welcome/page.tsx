@@ -144,7 +144,7 @@ export default function CreatorWelcomePage() {
             >
               Help Center
             </Link>
-            <Link href="/creator/dashboard">
+            <Link href="/creatorlogin">
               <Button variant="default" size="sm" className="flex items-center">
                 <LogIn className="h-4 w-4 mr-2" />
                 Creator Sign In
@@ -165,7 +165,7 @@ export default function CreatorWelcomePage() {
               Your creative journey continues here. Sign in to manage your
               products, track your performance, and grow your business.
             </p>
-            <Link href="/creator/dashboard">
+            <Link href="/creatorlogin">
               <Button size="lg" className="text-lg px-8">
                 Sign In to Dashboard
                 <ChevronRight className="ml-2 h-4 w-4" />

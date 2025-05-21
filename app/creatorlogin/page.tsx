@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
-export default function LoginPage() {
+export default function CreatorLoginPage() {
   const { login, error, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,16 +25,16 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password, "user");
+    await login(email, password, "creator");
   };
 
   return (
     <div className="container mx-auto max-w-md py-12">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Customer Login</CardTitle>
+          <CardTitle className="text-2xl font-bold">Creator Login</CardTitle>
           <CardDescription>
-            Sign in to access your orders, wishlist, and more
+            Sign in to manage your products and earnings
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
@@ -47,9 +47,9 @@ export default function LoginPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="creator-email">Email</Label>
               <Input
-                id="email"
+                id="creator-email"
                 type="email"
                 placeholder="your.email@example.com"
                 value={email}
@@ -60,10 +60,10 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="creator-password">Password</Label>
               <div className="relative">
                 <Input
-                  id="password"
+                  id="creator-password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
@@ -102,9 +102,12 @@ export default function LoginPage() {
             </Button>
 
             <div className="text-center text-sm">
-              Don't have an account?{" "}
-              <Link href="/signup" className="text-primary hover:underline">
-                Sign up now
+              Not a creator yet?{" "}
+              <Link
+                href="/creator/signup"
+                className="text-primary hover:underline"
+              >
+                Apply to be a creator
               </Link>
             </div>
           </CardFooter>

@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     "Access your creator dashboard and manage your products on CreatorMarket",
 };
 
-// This special layout completely replaces the root layout
 export default function CreatorWelcomeLayout({
   children,
 }: {
