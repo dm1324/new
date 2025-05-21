@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth-context";
 import { products } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import AuthModal from "@/components/auth/auth-modal";
 import {
   Card,
   CardContent,
@@ -28,11 +30,19 @@ import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCartStore();
+  const { user } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
   const [orderComplete, setOrderComplete] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      setShowAuthModal(true);
+    }
+  }, [user]);
 
   const cartProducts = items.map((item) => {
     const product = products.find((p) => p.id === item.productId);
@@ -139,6 +149,11 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
     // Validate form before submission
     if (!validateForm()) return;
 
@@ -204,6 +219,8 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
