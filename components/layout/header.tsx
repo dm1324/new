@@ -173,9 +173,11 @@ export default function Header() {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right">
-                  <SheetHeader>
+                  <div className="flex items-center justify-between pt-4 px-1">
                     <SheetTitle>Menu</SheetTitle>
-                  </SheetHeader>
+                    <ModeToggle />
+                  </div>
+
                   <div className="mt-8 space-y-4">
                     <Link href={dashboardLink}>
                       <Button variant="ghost" className="w-full justify-start">
