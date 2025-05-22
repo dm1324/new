@@ -11,7 +11,6 @@ export interface User {
   email: string;
   role: UserRole;
   avatar?: string;
-  // Add these properties that were missing
   handle?: string;
   profileImage?: string;
   creatorProfile?: {
@@ -121,8 +120,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         error: null,
       });
 
-      // Redirect to home page instead of dashboard
-      router.push("/");
+      // Redirect based on role
+      if (role === "creator") {
+        router.push("/creator/dashboard");
+      } else {
+        router.push("/");
+      }
     } catch (error) {
       setAuthState((prev) => ({
         ...prev,
@@ -167,8 +170,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         error: null,
       });
 
-      // Redirect to home page instead of dashboard
-      router.push("/");
+      // Redirect based on role
+      if (userData.role === "creator") {
+        router.push("/creator/dashboard");
+      } else {
+        router.push("/");
+      }
     } catch (error) {
       setAuthState((prev) => ({
         ...prev,
